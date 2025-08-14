@@ -1,0 +1,134 @@
+
+	   
+def ctrip_flight_scraper(from_city_name: str, to_city_name: str, depart_date: str):
+    """
+    爬取携程指定出发城市、目的城市和日期的全部航班信息（支持中文城市名）。
+
+    参数:
+    - from_city_name: 出发城市中文名称，例如 "北京"
+    - to_city_name: 目的城市中文名称，例如 "上海"
+    - depart_date: 出发日期，格式 "YYYY-MM-DD"
+
+    返回:
+    - List[Dict]，每个字典包含航班信息：
+      {
+        "airline": 航空公司,
+        "flight": 航班号,
+        "departure_airport": 起飞机场,
+        "arrival_airport": 降落机场,
+        "departure_time": 起飞时间,
+        "arrival_time": 降落时间,
+        "price": 票价（字符串）
+      }
+    """
+	
+
+
+def ctrip_train_scraper(from_city, to_city, depart_date):
+    """
+    爬取携程国内高铁/动车车次信息
+
+    参数：
+        from_city (str): 出发城市（中文，如 '北京'）
+        to_city (str): 到达城市（中文，如 '上海'）
+        depart_date (str): 出发日期（格式 'YYYY-MM-DD'）
+
+    返回：
+        list[dict]: 包含车次、出发/到达站、时间、价格、余票信息的字典列表
+    """
+	
+
+
+def get_travel_info(api_key, origin_addr, destination_addr)：
+"""
+    获取两个地址之间的出行信息（公共交通 & 出租车）
+
+    功能:
+        先将出发地和目的地地址解析为经纬度，再调用高德路线 API
+        获取公共交通最短时间/费用 & 出租车最短时间/费用。
+
+    参数:
+        api_key (str): 高德 API Key
+        origin_addr (str): 出发地地址
+        destination_addr (str): 目的地地址
+
+    返回:
+        dict: {
+            "出发地": str,
+            "目的地": str,
+            "公共交通最短时间": float (分钟),
+            "公共交通费用": str,
+            "出租车最短时间": float (分钟),
+            "出租车费用": str
+        }
+"""
+
+
+def ctrip_hotel_scraper(destination, checkin, checkout, rooms, adults, children, keyword=None, max_hotels=20):
+    """
+       从携程酒店列表页获取酒店数据
+
+       参数：
+           destination (str): 目的地或酒店名称
+           checkin (str): 入住日期，格式 YYYY/MM/DD
+           checkout (str): 退房日期，格式 YYYY/MM/DD
+           rooms (int): 房间数
+           adults (int): 成人数
+           children (int): 儿童数
+           keyword (str, 可选): 地址或酒店的进一步描述
+           max_hotels (int): 需要抓取的酒店数量，默认 20
+
+       返回：
+           list[dict]: 酒店数据字典列表，包含：
+               - 酒店名称
+               - 评分
+               - 房型
+               - 价格
+       """
+	   
+
+def search_with_price(api_key, search_type="around", keywords="饭店", location=None, city=None, radius=1000, remote_debug_port=9222):
+    """
+    综合搜索餐厅并补全人均消费信息
+
+    功能:
+        使用高德地图 API 按指定方式搜索饭店（POI关键词搜索、周边搜索、行政区搜索），
+        并通过大众点评补充人均消费信息。
+
+    参数:
+        api_key (str): 高德开放平台 API Key。
+        search_type (str): 搜索类型，可选值：
+            - "around": 周边搜索（需提供 location）
+            - "text": 关键词搜索（需提供 city）
+            - "district": 行政区搜索（需提供 city 为行政区边界坐标）
+        keywords (str): 搜索关键词，例如 "饭店"、"火锅" 等。
+        location (tuple[float, float] | None): 经纬度坐标 (lon, lat)，仅在 search_type="around" 时使用。
+        city (str | None): 城市名（用于 text 搜索）或行政区边界坐标字符串（用于 district 搜索）。
+        radius (int): 搜索半径（米），仅在 search_type="around" 时生效。
+        remote_debug_port (int): 已登录的大众点评 Chrome 浏览器远程调试端口。
+
+    返回:
+        list[dict]: 搜索结果列表，每个元素是一个字典，字段包括：
+            - name (str): 饭店名称
+            - address (str): 饭店地址
+            - type (str): 饭店类型/菜系
+            - rating (str | None): 高德 API 返回的评分（可能为空）
+            - location (str): 饭店经纬度 "lon,lat"
+            - avg_price (str | None): 大众点评获取的人均消费，例如 "￥49"
+
+    """
+	
+	
+def search_city_gaode(city_name: str) -> str:
+    """
+    根据城市名称获取高德天气API所需的adcode
+    输入:城市名称(例如"北京")
+    输出:adcode(用于后续天气查询)
+    """
+    
+def query_weather_gaode(adcode: str) -> str:
+    """
+    使用高德天气API查询实时天气
+    输入:adcode(例如"110101")
+    输出:实时天气信息
+    """

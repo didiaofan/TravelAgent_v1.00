@@ -1,0 +1,1443 @@
+[
+  {
+    "name": "北京环球影城",
+    "location": {
+      "lat": 39.854,  
+      "lng": 116.680
+    },
+    "district": "通州区",
+    "tags": ["主题乐园", "电影IP", "娱乐"],
+    "ticket_price": "418-748元（分平日/旺季）",  
+    "open_time": "08:30-21:00（动态调整）",  
+    "close_day": "全年开放",
+    "suggested_duration_hours": 10, 
+    "popularity_score": 0.99, 
+    "description": "全球第五大环球影城，亚洲规模最大主题乐园。含哈利·波特、变形金刚等7大主题区，37个游乐设施及24场演出。配套环球城市大道餐饮购物区及2家高端酒店，拉动周边文旅消费超千亿元。",  // :cite[1]:cite[5]:cite[7]
+    "nearby_subway": "环球度假区站（7号线/八通线）",  
+    "suitable_for": ["成人", "青少年", "儿童"],  
+    "indoor": "混合（室内外结合）"
+  },
+  
+  {
+    "name": "故宫博物院",
+    "location": {
+      "lat": 39.916345,
+      "lng": 116.397155
+    },
+    "district": "东城区",
+    "tags": [
+      "历史",
+      "博物馆",
+      "文化遗产"
+    ],
+    "ticket_price": 60,
+    "open_time": "08:30-17:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.98,
+    "description": "明清两代皇家宫殿，世界最大、保存最完整的木质结构古建筑群，藏有百万件文物。",
+    "nearby_subway": "天安门东站",
+    "suitable_for": [
+      "成人",
+      "老人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "八达岭长城",
+    "location": {
+      "lat": 40.359,
+      "lng": 116.020
+    },
+    "district": "延庆区",
+    "tags": [
+      "世界遗产",
+      "古迹",
+      "徒步"
+    ],
+    "ticket_price": 40,
+    "open_time": "06:30-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.95,
+    "description": "明长城精华段，以险峻地势和完整城关著称，'不到长城非好汉'碑所在地。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "颐和园",
+    "location": {
+      "lat": 39.999,
+      "lng": 116.275
+    },
+    "district": "海淀区",
+    "tags": [
+      "皇家园林",
+      "湖泊",
+      "世界遗产"
+    ],
+    "ticket_price": 30,
+    "open_time": "06:30-18:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.93,
+    "description": "中国四大名园之一，以杭州西湖为蓝本建造的皇家山水园林，拥有长廊、佛香阁等标志性景观。",
+    "nearby_subway": "北宫门站",
+    "suitable_for": [
+      "成人",
+      "老人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北京野生动物园",
+    "location": {
+      "lat": 39.496,  
+      "lng": 116.334
+    },
+    "district": "大兴区",
+    "tags": ["动物园", "亲子", "自然"],
+    "ticket_price": 150,  
+    "open_time": "08:30-17:30（旺季延长）",  
+    "close_day": "全年开放",
+    "suggested_duration_hours": 6,  
+    "popularity_score": 0.92,  
+    "description": "国家4A级景区，占地3600亩，展示340种5000余头野生动物。以沉浸式体验为核心，设自驾区、猛兽投喂车、儿童动物园等特色展区。获“北京网红打卡地”“首都劳动奖状”，年游客量较2013年增长4倍。",  // :cite[2]:cite[4]:cite[6]
+    "nearby_subway": "无直达地铁（需公交接驳）",  
+    "suitable_for": ["儿童", "家庭"],  
+    "indoor": false  
+  },
+  {
+    "name": "天坛公园",
+    "location": {
+      "lat": 39.882,
+      "lng": 116.406
+    },
+    "district": "东城区",
+    "tags": [
+      "祭祀建筑",
+      "世界遗产",
+      "园林"
+    ],
+    "ticket_price": 15,
+    "open_time": "06:00-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.90,
+    "description": "明清皇帝祭天场所，以祈年殿、回音壁等建筑展现'天圆地方'哲学观。",
+    "nearby_subway": "天坛东门站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "圆明园",
+    "location": {
+      "lat": 40.010,
+      "lng": 116.300
+    },
+    "district": "海淀区",
+    "tags": [
+      "遗址",
+      "皇家园林",
+      "历史"
+    ],
+    "ticket_price": 10,
+    "open_time": "07:00-19:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.85,
+    "description": "清代皇家园林遗址，以西洋楼大水法残垣著称，展现近代历史沧桑。",
+    "nearby_subway": "圆明园站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "雍和宫",
+    "location": {
+      "lat": 39.949,
+      "lng": 116.417
+    },
+    "district": "东城区",
+    "tags": [
+      "藏传佛教",
+      "寺庙",
+      "历史"
+    ],
+    "ticket_price": 25,
+    "open_time": "09:00-16:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.88,
+    "description": "北京最大藏传佛教寺院，原为雍正帝王府，融合汉满蒙藏建筑风格。",
+    "nearby_subway": "雍和宫站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "什刹海",
+    "location": {
+      "lat": 39.941,
+      "lng": 116.380
+    },
+    "district": "西城区",
+    "tags": [
+      "湖泊",
+      "胡同",
+      "夜生活"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.87,
+    "description": "由前海、后海、西海组成的水域，周边胡同与王府林立，夜晚酒吧街氛围浓厚。",
+    "nearby_subway": "北海北站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "奥林匹克公园",
+    "location": {
+      "lat": 39.992,
+      "lng": 116.396
+    },
+    "district": "朝阳区",
+    "tags": [
+      "现代建筑",
+      "体育场馆",
+      "夜景"
+    ],
+    "ticket_price": 0,
+    "open_time": "06:00-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.89,
+    "description": "2008年奥运会主会场，鸟巢和水立方灯光夜景璀璨，可登奥林匹克塔俯瞰城市。",
+    "nearby_subway": "奥林匹克公园站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "798艺术区",
+    "location": {
+      "lat": 39.984,
+      "lng": 116.494
+    },
+    "district": "朝阳区",
+    "tags": [
+      "艺术",
+      "展览",
+      "工业风"
+    ],
+    "ticket_price": 0,
+    "open_time": "10:00-19:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.84,
+    "description": "由旧工厂改造的先锋艺术聚集地，画廊、设计工作室和咖啡馆遍布包豪斯风格建筑群。",
+    "nearby_subway": "望京南站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "景山公园",
+    "location": {
+      "lat": 39.924,
+      "lng": 116.391
+    },
+    "district": "西城区",
+    "tags": [
+      "城市全景",
+      "皇家园林",
+      "历史"
+    ],
+    "ticket_price": 2,
+    "open_time": "06:30-20:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 1,
+    "popularity_score": 0.82,
+    "description": "北京中轴线制高点，俯瞰故宫全景的最佳位置，崇祯皇帝自缢处。",
+    "nearby_subway": "南锣鼓巷站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北海公园",
+    "location": {
+      "lat": 39.928,
+      "lng": 116.382
+    },
+    "district": "西城区",
+    "tags": [
+      "皇家园林",
+      "湖泊",
+      "白塔"
+    ],
+    "ticket_price": 10,
+    "open_time": "06:30-20:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.80,
+    "description": "中国现存最古老的皇家园林，以琼华岛白塔和九龙壁著称，可泛舟唱《让我们荡起双桨》。",
+    "nearby_subway": "北海北站",
+    "suitable_for": [
+      "成人",
+      "老人",
+      "儿童"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "南锣鼓巷",
+    "location": {
+      "lat": 39.933,
+      "lng": 116.403
+    },
+    "district": "东城区",
+    "tags": [
+      "胡同",
+      "美食",
+      "文艺"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.83,
+    "description": "北京最著名的胡同商业区，融合传统四合院与创意小店，文宇奶酪店不可错过。",
+    "nearby_subway": "南锣鼓巷站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "慕田峪长城",
+    "location": {
+      "lat": 40.433,
+      "lng": 116.567
+    },
+    "district": "怀柔区",
+    "tags": [
+      "长城",
+      "徒步",
+      "自然"
+    ],
+    "ticket_price": 45,
+    "open_time": "07:30-17:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 5,
+    "popularity_score": 0.78,
+    "description": "以秀美植被和险峻敌楼闻名的长城段，人流量少于八达岭，可坐滑道下山。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "国家博物馆",
+    "location": {
+      "lat": 39.904,
+      "lng": 116.398
+    },
+    "district": "东城区",
+    "tags": [
+      "博物馆",
+      "历史",
+      "免费"
+    ],
+    "ticket_price": 0,
+    "open_time": "09:00-17:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.86,
+    "description": "中华文物收藏量最大的博物馆，四羊方尊、后母戊鼎等镇馆之宝展现五千年文明。",
+    "nearby_subway": "天安门东站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "五道营胡同",
+    "location": {
+      "lat": 39.949,
+      "lng": 116.417
+    },
+    "district": "东城区",
+    "tags": [
+      "胡同",
+      "文艺",
+      "咖啡馆"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.75,
+    "description": "新兴文艺胡同聚集地，设计师小店与独立咖啡馆比邻，比南锣鼓巷更清静。",
+    "nearby_subway": "雍和宫站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "明十三陵",
+    "location": {
+      "lat": 40.251,
+      "lng": 116.223
+    },
+    "district": "昌平区",
+    "tags": [
+      "世界遗产",
+      "陵墓",
+      "历史"
+    ],
+    "ticket_price": 135,
+    "open_time": "08:30-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.77,
+    "description": "明代十三位皇帝的陵寝建筑群，定陵地宫可入内参观，神道石像生雕刻精美。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "红砖美术馆",
+    "location": {
+      "lat": 40.028,
+      "lng": 116.462
+    },
+    "district": "朝阳区",
+    "tags": [
+      "艺术",
+      "建筑",
+      "园林"
+    ],
+    "ticket_price": 120,
+    "open_time": "10:00-17:30",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.72,
+    "description": "以红砖建构的当代美术馆，庭院水景与几何建筑构成光影诗画，秋季爬山虎覆盖如油画。",
+    "nearby_subway": "马泉营站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "法海寺",
+    "location": {
+      "lat": 39.933,
+      "lng": 116.150
+    },
+    "district": "石景山区",
+    "tags": [
+      "壁画",
+      "佛教",
+      "古建"
+    ],
+    "ticket_price": 100,
+    "open_time": "09:00-16:30",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.65,
+    "description": "深藏明代壁画的皇家寺院，沥粉堆金工艺在灯光下璀璨生辉，被誉为'北京小敦煌'。",
+    "nearby_subway": "金安桥站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "东交民巷",
+    "location": {
+      "lat": 39.902,
+      "lng": 116.407
+    },
+    "district": "东城区",
+    "tags": [
+      "近代建筑",
+      "历史",
+      "街区"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 1,
+    "popularity_score": 0.70,
+    "description": "北京唯一近代西式建筑群，圣弥厄尔教堂哥特尖顶与旧使馆砖雕门楼展现殖民历史。",
+    "nearby_subway": "崇文门站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "古北水镇",
+    "location": {
+      "lat": 40.656,
+      "lng": 117.260
+    },
+    "district": "密云区",
+    "tags": [
+      "古镇",
+      "司马台长城",
+      "温泉"
+    ],
+    "ticket_price": 140,
+    "open_time": "09:00-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 8,
+    "popularity_score": 0.75,
+    "description": "京郊'北方小江南'，复建明清风格水镇，夜游无人机灯光秀，可联动司马台长城游览。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "首钢园",
+    "location": {
+      "lat": 39.910,
+      "lng": 116.180
+    },
+    "district": "石景山区",
+    "tags": [
+      "工业遗址",
+      "冬奥",
+      "未来感"
+    ],
+    "ticket_price": 0,
+    "open_time": "07:00-20:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.68,
+    "description": "改造自钢铁厂的后工业景观，高空步道穿越炼钢炉群，冬奥滑雪大跳台'水晶鞋'夜景惊艳。",
+    "nearby_subway": "金安桥站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "中国铁道博物馆",
+    "location": {
+      "lat": 39.908,
+      "lng": 116.502
+    },
+    "district": "朝阳区",
+    "tags": [
+      "火车",
+      "工业",
+      "怀旧"
+    ],
+    "ticket_price": 20,
+    "open_time": "09:00-16:30",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.62,
+    "description": "东郊馆露天展区陈列老式蒸汽机车与绿皮车厢，可进入毛主席专列感受历史场景。",
+    "nearby_subway": "将台站",
+    "suitable_for": [
+      "儿童",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "香山公园",
+    "location": {
+      "lat": 39.984,
+      "lng": 116.183
+    },
+    "district": "海淀区",
+    "tags": [
+      "红叶",
+      "登山",
+      "皇家园林"
+    ],
+    "ticket_price": 10,
+    "open_time": "06:00-18:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.74,
+    "description": "北京秋日红叶首选地，登香炉峰俯瞰漫山斑斓，双清别墅为毛泽东旧居。",
+    "nearby_subway": "巴沟站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "恭王府",
+    "location": {
+      "lat": 39.936,
+      "lng": 116.380
+    },
+    "district": "西城区",
+    "tags": [
+      "王府",
+      "和珅",
+      "园林"
+    ],
+    "ticket_price": 40,
+    "open_time": "08:30-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.71,
+    "description": "清代最大王府，曾为和珅宅邸，西洋门与福字碑为镇园之宝，'一座恭王府，半部清代史'。",
+    "nearby_subway": "北海北站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "周口店北京人遗址",
+    "location": {
+      "lat": 39.692,
+      "lng": 115.925
+    },
+    "district": "房山区",
+    "tags": [
+      "考古",
+      "世界遗产",
+      "博物馆"
+    ],
+    "ticket_price": 30,
+    "open_time": "09:00-16:30",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.60,
+    "description": "旧石器时代重要遗址，出土北京猿人与山顶洞人化石，揭示人类进化历程。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "北锣鼓巷",
+    "location": {
+      "lat": 39.941,
+      "lng": 116.400
+    },
+    "district": "东城区",
+    "tags": [
+      "胡同",
+      "文艺",
+      "静谧"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 1,
+    "popularity_score": 0.65,
+    "description": "与南锣鼓巷一街之隔的清净胡同，咖啡馆与蔷薇花墙构成慢生活图景。",
+    "nearby_subway": "北新桥站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "大栅栏",
+    "location": {
+      "lat": 39.899,
+      "lng": 116.391
+    },
+    "district": "西城区",
+    "tags": [
+      "老字号",
+      "商业街",
+      "历史"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.73,
+    "description": "百年商业街聚集张一元、内联升等老字号，曾是京城戏院与电影院集中地。",
+    "nearby_subway": "前门站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "牛街",
+    "location": {
+      "lat": 39.885,
+      "lng": 116.368
+    },
+    "district": "西城区",
+    "tags": [
+      "清真美食",
+      "文化街区",
+      "市井"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.69,
+    "description": "北京清真美食核心区，聚宝源涮肉、洪记包子、白记年糕等老店林立。",
+    "nearby_subway": "牛街站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "潭柘寺",
+    "location": {
+      "lat": 39.901,
+      "lng": 116.025
+    },
+    "district": "门头沟区",
+    "tags": [
+      "佛教",
+      "古刹",
+      "祈福"
+    ],
+    "ticket_price": 50,
+    "open_time": "08:30-16:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.61,
+    "description": "北京最古老佛教寺院，'先有潭柘寺，后有北京城'，千年银杏与流杯亭最具特色。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "白云观",
+    "location": {
+      "lat": 39.886,
+      "lng": 116.340
+    },
+    "district": "西城区",
+    "tags": [
+      "道教",
+      "古建",
+      "文化"
+    ],
+    "ticket_price": 10,
+    "open_time": "08:30-16:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.58,
+    "description": "全真道第一丛林，丘处机遗蜕埋葬地，春节庙会摸石猴民俗延续数百年。",
+    "nearby_subway": "白云观站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "中国人民革命军事博物馆",
+    "location": {
+      "lat": 39.907,
+      "lng": 116.318
+    },
+    "district": "海淀区",
+    "tags": [
+      "军事",
+      "历史",
+      "免费"
+    ],
+    "ticket_price": 0,
+    "open_time": "09:00-17:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.66,
+    "description": "中国唯一大型综合性军事博物馆，陈列古代战争兵器到现代尖端武器。",
+    "nearby_subway": "军事博物馆站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "北京动物园",
+    "location": {
+      "lat": 39.938,
+      "lng": 116.336
+    },
+    "district": "西城区",
+    "tags": [
+      "动物",
+      "亲子",
+      "园林"
+    ],
+    "ticket_price": 15,
+    "open_time": "07:30-18:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.70,
+    "description": "中国开放最早、动物种类最多的动物园，大熊猫馆为明星展区。",
+    "nearby_subway": "动物园站",
+    "suitable_for": [
+      "儿童",
+      "家庭"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北京植物园",
+    "location": {
+      "lat": 39.999,
+      "lng": 116.207
+    },
+    "district": "海淀区",
+    "tags": [
+      "植物",
+      "赏花",
+      "温室"
+    ],
+    "ticket_price": 5,
+    "open_time": "06:00-20:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.63,
+    "description": "集科研与游览为一体的植物园，樱桃沟水杉林与卧佛寺为特色景观。",
+    "nearby_subway": "巴沟站",
+    "suitable_for": [
+      "老人",
+      "家庭"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北海公园",
+    "location": {
+      "lat": 39.928,
+      "lng": 116.382
+    },
+    "district": "西城区",
+    "tags": [
+      "皇家园林",
+      "湖泊",
+      "白塔"
+    ],
+    "ticket_price": 10,
+    "open_time": "06:30-20:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.80,
+    "description": "中国现存最古老的皇家园林，以琼华岛白塔和九龙壁著称，可泛舟唱《让我们荡起双桨》。",
+    "nearby_subway": "北海北站",
+    "suitable_for": [
+      "成人",
+      "老人",
+      "儿童"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "石景山游乐园",
+    "location": {
+      "lat": 39.910,
+      "lng": 116.200
+    },
+    "district": "石景山区",
+    "tags": [
+      "游乐场",
+      "亲子",
+      "摩天轮"
+    ],
+    "ticket_price": 10,
+    "open_time": "09:00-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 5,
+    "popularity_score": 0.67,
+    "description": "老牌主题乐园，欧式城堡与过山车并存，'幻想世界'主题区适合低龄儿童。",
+    "nearby_subway": "八角游乐园站",
+    "suitable_for": [
+      "儿童",
+      "家庭"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "中央电视塔",
+    "location": {
+      "lat": 39.920,
+      "lng": 116.300
+    },
+    "district": "海淀区",
+    "tags": [
+      "观景台",
+      "夜景",
+      "旋转餐厅"
+    ],
+    "ticket_price": 70,
+    "open_time": "08:30-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.64,
+    "description": "北京制高点之一，238米观景台俯瞰玉渊潭与城市天际线，顶层旋转餐厅可晚餐观景。",
+    "nearby_subway": "军事博物馆站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "欢乐谷",
+    "location": {
+      "lat": 39.869,
+      "lng": 116.499
+    },
+    "district": "朝阳区",
+    "tags": [
+      "主题乐园",
+      "过山车",
+      "水上乐园"
+    ],
+    "ticket_price": 299,
+    "open_time": "09:00-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 8,
+    "popularity_score": 0.76,
+    "description": "大型主题乐园，水晶神翼过山车与奥德赛之旅激流勇进为明星项目，夏季开放水公园。",
+    "nearby_subway": "欢乐谷景区站",
+    "suitable_for": [
+      "青少年",
+      "家庭"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "韩美林艺术馆",
+    "location": {
+      "lat": 39.786,
+      "lng": 116.327
+    },
+    "district": "通州区",
+    "tags": [
+      "艺术",
+      "雕塑",
+      "设计"
+    ],
+    "ticket_price": 0,
+    "open_time": "09:00-17:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.55,
+    "description": "展示福娃设计者艺术成就，青铜雕塑与岩画作品充满原始张力，建筑本身为设计精品。",
+    "nearby_subway": "九棵树站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "中国科学技术馆",
+    "location": {
+      "lat": 40.010,
+      "lng": 116.380
+    },
+    "district": "朝阳区",
+    "tags": [
+      "科普",
+      "互动体验",
+      "儿童"
+    ],
+    "ticket_price": 30,
+    "open_time": "09:30-17:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.71,
+    "description": "巨型球幕影院与航天展品为特色，互动装置让科学原理可视化，儿童科学乐园独立售票。",
+    "nearby_subway": "奥林匹克公园站",
+    "suitable_for": [
+      "儿童",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "国家大剧院",
+    "location": {
+      "lat": 39.904,
+      "lng": 116.390
+    },
+    "district": "西城区",
+    "tags": [
+      "建筑",
+      "演出",
+      "现代"
+    ],
+    "ticket_price": 40,
+    "open_time": "09:00-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.68,
+    "description": "钛金属巨蛋漂浮水面，内部歌剧厅与公共空间极具未来感，夜间灯光幻彩迷人。",
+    "nearby_subway": "天安门西站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "北京大学校园",
+    "location": {
+      "lat": 39.992,
+      "lng": 116.306
+    },
+    "district": "海淀区",
+    "tags": [
+      "名校",
+      "园林",
+      "历史"
+    ],
+    "ticket_price": 0,
+    "open_time": "07:00-21:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.73,
+    "description": "未名湖与博雅塔构成燕园核心景观，赛克勒考古博物馆与图书馆承载学术底蕴。",
+    "nearby_subway": "北京大学东门站",
+    "suitable_for": [
+      "青少年",
+      "成人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "清华大学校园",
+    "location": {
+      "lat": 40.000,
+      "lng": 116.330
+    },
+    "district": "海淀区",
+    "tags": [
+      "名校",
+      "建筑",
+      "荷塘"
+    ],
+    "ticket_price": 0,
+    "open_time": "08:30-17:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.72,
+    "description": "水木清华与朱自清《荷塘月色》原址，大礼堂与清华门为西式建筑典范。",
+    "nearby_subway": "圆明园站",
+    "suitable_for": [
+      "青少年",
+      "成人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "蓝色港湾",
+    "location": {
+      "lat": 39.950,
+      "lng": 116.480
+    },
+    "district": "朝阳区",
+    "tags": [
+      "购物",
+      "灯光节",
+      "亲子"
+    ],
+    "ticket_price": 0,
+    "open_time": "10:00-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.66,
+    "description": "欧式风情购物公园，灯光节与喷泉秀冬季最盛，儿童城与品牌店满足家庭消费。",
+    "nearby_subway": "枣营站",
+    "suitable_for": [
+      "家庭",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "十渡风景区",
+    "location": {
+      "lat": 39.640,
+      "lng": 115.590
+    },
+    "district": "房山区",
+    "tags": [
+      "喀斯特",
+      "漂流",
+      "蹦极"
+    ],
+    "ticket_price": 0,
+    "open_time": "08:00-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 8,
+    "popularity_score": 0.59,
+    "description": "北方罕见喀斯特峡谷，拒马河漂流与孤山寨一线天为特色，蹦极跳台挑战胆量极限。",
+    "nearby_subway": null,
+    "suitable_for": [
+      "青少年",
+      "成人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北京海洋馆",
+    "location": {
+      "lat": 39.940,
+      "lng": 116.330
+    },
+    "district": "海淀区",
+    "tags": [
+      "海洋生物",
+      "表演",
+      "亲子"
+    ],
+    "ticket_price": 175,
+    "open_time": "09:00-17:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.69,
+    "description": "亚洲最大内陆水族馆，海底环游隧道与白鲸剧场表演最受欢迎，与动物园联票更优惠。",
+    "nearby_subway": "动物园站",
+    "suitable_for": [
+      "儿童",
+      "家庭"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "凤凰岭",
+    "location": {
+      "lat": 40.109,
+      "lng": 116.100
+    },
+    "district": "海淀区",
+    "tags": [
+      "登山",
+      "奇石",
+      "佛教"
+    ],
+    "ticket_price": 25,
+    "open_time": "07:00-17:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 5,
+    "popularity_score": 0.57,
+    "description": "京西'小黄山'，花岗岩地貌形成仙人足迹等奇观，龙泉寺与摩崖石刻藏身山间。",
+    "nearby_subway": "北安河站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "中国美术馆",
+    "location": {
+      "lat": 39.925,
+      "lng": 116.409
+    },
+    "district": "东城区",
+    "tags": [
+      "艺术",
+      "展览",
+      "免费"
+    ],
+    "ticket_price": 0,
+    "open_time": "09:00-17:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.63,
+    "description": "国家级美术殿堂，藏有近现代名家力作，建筑屋顶借鉴敦煌莫高窟样式。",
+    "nearby_subway": "中国美术馆站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "龙潭公园",
+    "location": {
+      "lat": 39.883,
+      "lng": 116.440
+    },
+    "district": "东城区",
+    "tags": [
+      "园林",
+      "龙舟",
+      "市井"
+    ],
+    "ticket_price": 2,
+    "open_time": "06:00-22:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.54,
+    "description": "南城居民休闲胜地，湖心岛与仿古建筑相映，冬季庙会舞龙舞狮热闹非凡。",
+    "nearby_subway": "龙潭湖站",
+    "suitable_for": [
+      "老人",
+      "家庭"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北京天文馆",
+    "location": {
+      "lat": 39.932,
+      "lng": 116.331
+    },
+    "district": "西城区",
+    "tags": [
+      "天文",
+      "球幕",
+      "科普"
+    ],
+    "ticket_price": 45,
+    "open_time": "09:00-16:30",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 3,
+    "popularity_score": 0.60,
+    "description": "亚洲首座天文馆，天象厅球幕演出模拟星空，陨石展厅藏有月球样本。",
+    "nearby_subway": "动物园站",
+    "suitable_for": [
+      "青少年",
+      "儿童"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "中华民族园",
+    "location": {
+      "lat": 39.983,
+      "lng": 116.400
+    },
+    "district": "朝阳区",
+    "tags": [
+      "民族文化",
+      "建筑",
+      "表演"
+    ],
+    "ticket_price": 90,
+    "open_time": "08:30-18:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 4,
+    "popularity_score": 0.56,
+    "description": "56个民族村寨微缩园区，风雨桥与吊脚楼等建筑按原貌复建，节日有民俗表演。",
+    "nearby_subway": "奥体中心站",
+    "suitable_for": [
+      "家庭",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "孔庙和国子监",
+    "location": {
+      "lat": 39.948,
+      "lng": 116.417
+    },
+    "district": "东城区",
+    "tags": [
+      "古代教育",
+      "儒家",
+      "历史"
+    ],
+    "ticket_price": 30,
+    "open_time": "08:30-18:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.61,
+    "description": "元明清最高学府，进士题名碑与辟雍大殿展现古代教育制度，紧邻雍和宫可联动游览。",
+    "nearby_subway": "雍和宫站",
+    "suitable_for": [
+      "成人",
+      "青少年"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "宋庆龄故居",
+    "location": {
+      "lat": 39.942,
+      "lng": 116.380
+    },
+    "district": "西城区",
+    "tags": [
+      "名人故居",
+      "园林",
+      "历史"
+    ],
+    "ticket_price": 20,
+    "open_time": "09:00-16:30",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 1,
+    "popularity_score": 0.52,
+    "description": "什刹海畔清代王府花园，宋庆龄晚年居所，西府海棠与恩波亭静美依旧。",
+    "nearby_subway": "积水潭站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "北京古代建筑博物馆",
+    "location": {
+      "lat": 39.883,
+      "lng": 116.367
+    },
+    "district": "西城区",
+    "tags": [
+      "古建",
+      "藻井",
+      "文化"
+    ],
+    "ticket_price": 15,
+    "open_time": "09:00-16:00",
+    "close_day": "周一闭馆",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.48,
+    "description": "藏于先农坛内，隆福寺藻井星空图精美绝伦，系统展示中国古建技艺演变。",
+    "nearby_subway": "天桥站",
+    "suitable_for": [
+      "成人",
+      "专业"
+    ],
+    "indoor": true
+  },
+  {
+    "name": "将府公园",
+    "location": {
+      "lat": 39.978,
+      "lng": 116.500
+    },
+    "district": "朝阳区",
+    "tags": [
+      "湿地",
+      "铁路",
+      "野鸭"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.53,
+    "description": "废弃铁路穿行湿地，二月兰花海春季盛放，观鸟台可见绿头鸭等水禽。",
+    "nearby_subway": "将台站",
+    "suitable_for": [
+      "老人",
+      "家庭"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "模式口大街",
+    "location": {
+      "lat": 39.933,
+      "lng": 116.167
+    },
+    "district": "石景山区",
+    "tags": [
+      "古道",
+      "民俗",
+      "壁画"
+    ],
+    "ticket_price": 0,
+    "open_time": "全天开放",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 2,
+    "popularity_score": 0.47,
+    "description": "京西古道重要段落，法海寺起点，骆驼商队雕塑与胡同墙绘再现昔日繁华。",
+    "nearby_subway": "金安桥站",
+    "suitable_for": [
+      "成人",
+      "老人"
+    ],
+    "indoor": false
+  },
+  {
+    "name": "智化寺",
+    "location": {
+      "lat": 39.917,
+      "lng": 116.430
+    },
+    "district": "东城区",
+    "tags": [
+      "明代",
+      "京音乐",
+      "藻井"
+    ],
+    "ticket_price": 20,
+    "open_time": "09:00-17:00",
+    "close_day": "全年开放",
+    "suggested_duration_hours": 1,
+    "popularity_score": 0.45,
+    "description": "保存明代建筑风格与佛教音乐的寺院，转轮藏与藻井雕刻为京城孤例。",
+    "nearby_subway": "朝阳门站",
+    "suitable_for": [
+      "成人",
+      "专业"
+    ],
+    "indoor": true
+  }
+]
