@@ -255,9 +255,13 @@ def generate_candidates(state: AgentState) -> AgentState:
         result = generate_candidate_attractions(state.get("structured_info", {}))
         state["structured_info"]["candidates"] = result.get("candidates", [])
         state["structured_info"]["daily_plan"] = result.get("daily_plan", [])
+        state["structured_info"]["total_cost"] = result.get("total_cost")
+        state["structured_info"]["itinerary_text"] = result.get("itinerary_text")
     except Exception:
         state["structured_info"].setdefault("candidates", [])
         state["structured_info"].setdefault("daily_plan", [])
+        state["structured_info"].setdefault("total_cost", None)
+        state["structured_info"].setdefault("itinerary_text", "")
     return state
 
 # 生成追问节点
