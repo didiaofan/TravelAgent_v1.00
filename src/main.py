@@ -85,7 +85,8 @@ def run_travel_agent_multi_turn(initial_input: str, max_turns: int = 5):
 
 # 测试示例
 if __name__ == "__main__":
-    user_input = "我带孩子从上海到北京玩两天，时间是2025-08-10至2025-08-11，想去故宫和环球影城，只有我和孩子两个人，两天预1800"
+    # user_input = "我带孩子从上海到北京玩两天，时间是2025-08-10至2025-08-11，想去故宫和环球影城，只有我和孩子两个人，两天预1800"
+    user_input = "我带孩子从上海到北京玩两天"
     
     print("=== 旅行规划Agent V2 (重构版) ===")
     print(f"User: {user_input}")

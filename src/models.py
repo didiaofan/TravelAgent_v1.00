@@ -34,3 +34,18 @@ class AgentState(TypedDict):
     conversation: List[Dict[str, str]]  # 完整的对话历史
     missing_fields: List[str]  # 当前缺失的字段列表
     step_count: int  # 对话轮次计数器
+    
+    # 约束处理阶段的数据
+    candidate_pois: List[Dict[str, Any]]  # 候选景点列表
+    weather_adjusted_pois: List[Dict[str, Any]]  # 天气过滤后的景点
+    daily_time_limit: int  # 每日游玩时间限制（小时）
+    room_requirements: int  # 需要的房间数量
+    daily_route_plan: List[Dict[str, Any]]  # 每日路线规划
+    time_feasible_routes: List[Dict[str, Any]]  # 时间可行的路线
+    intensity_feasible_routes: List[Dict[str, Any]]  # 强度可行的路线
+    budget_feasible_plan: Dict[str, Any]  # 预算可行的最终方案
+    
+    # 约束处理状态
+    constraint_conflicts: List[str]  # 当前的约束冲突
+    backtrack_history: List[str]  # 回退历史
+    optimization_attempts: int  # 优化尝试次数

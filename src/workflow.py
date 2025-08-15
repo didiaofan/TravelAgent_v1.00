@@ -33,7 +33,22 @@ def init_state(user_input: str) -> AgentState:
         },
         "conversation": [{"role": "user", "content": user_input}],
         "missing_fields": list(REQUIRED_FIELDS.keys()),
-        "step_count": 0
+        "step_count": 0,
+        
+        # 约束处理阶段的数据初始化
+        "candidate_pois": [],
+        "weather_adjusted_pois": [], 
+        "daily_time_limit": 12,
+        "room_requirements": 1,
+        "daily_route_plan": [],
+        "time_feasible_routes": [],
+        "intensity_feasible_routes": [],
+        "budget_feasible_plan": {},
+        
+        # 约束处理状态初始化
+        "constraint_conflicts": [],
+        "backtrack_history": [],
+        "optimization_attempts": 0
     }
 
 # 解析用户输入节点
@@ -313,24 +328,33 @@ def generate_question(state: AgentState) -> AgentState:
 def create_agent_workflow():
     workflow = StateGraph(AgentState)
     
-    # 添加节点
+    # 添加用户需求收集节点
     workflow.add_node("parse_input", parse_user_input)
     workflow.add_node("check_fields", check_missing_fields)
     workflow.add_node("ask_question", generate_question)
     workflow.add_node("prepare_constraints", prepare_constraints)
     workflow.add_node("fetch_realtime_data", fetch_realtime_data)
     workflow.add_node("validate_constraints", validate_constraints)
-    workflow.add_node("generate_candidates", generate_candidates)
+    
+    # 添加约束处理节点
+    workflow.add_node("preference_filter", preference_filter)
+    workflow.add_node("team_constraints", team_constraints)
+    workflow.add_node("weather_filter", weather_filter)
+    workflow.add_node("route_feasibility", route_feasibility)
+    workflow.add_node("time_window_check", time_window_check)
+    workflow.add_node("intensity_check", intensity_check)
+    workflow.add_node("budget_check", budget_check)
+    workflow.add_node("conflict_resolution", conflict_resolution)
     
     # 设置入口点
     workflow.set_entry_point("parse_input")
     
-    # 添加边
+    # 用户需求收集阶段的边
     workflow.add_edge("parse_input", "check_fields")
     
     # 条件边 - 决定下一步或结束
-    def decide_next(state: AgentState) -> str:
-        # 信息完整：进入准备阶段；否则继续追问；达到最大轮次直接结束
+    def decide_next_phase(state: AgentState) -> str:
+        # 信息完整：进入约束处理阶段；否则继续追问；达到最大轮次直接结束
         if state["step_count"] >= MAX_CONVERSATION_STEPS:
             return END
         if not state["missing_fields"]:
@@ -339,7 +363,7 @@ def create_agent_workflow():
     
     workflow.add_conditional_edges(
         "check_fields",
-        decide_next,
+        decide_next_phase,
         {
             "ask_question": "ask_question",
             "prepare_constraints": "prepare_constraints",
@@ -347,15 +371,225 @@ def create_agent_workflow():
         }
     )
     
-    # 准备 → 实时数据 → 校验 → 候选；完成后结束
+    # 准备阶段 → 约束处理阶段
     workflow.add_edge("prepare_constraints", "fetch_realtime_data")
     workflow.add_edge("fetch_realtime_data", "validate_constraints")
-    workflow.add_edge("validate_constraints", "generate_candidates")
-    workflow.add_edge("generate_candidates", END)
+    workflow.add_edge("validate_constraints", "preference_filter")
+    
+    # 约束处理阶段的边（按照依赖关系）
+    workflow.add_edge("preference_filter", "team_constraints")
+    workflow.add_edge("team_constraints", "weather_filter") 
+    workflow.add_edge("weather_filter", "route_feasibility")
+    workflow.add_edge("route_feasibility", "time_window_check")
+    workflow.add_edge("time_window_check", "intensity_check")
+    workflow.add_edge("intensity_check", "budget_check")
+    
+    # 预算检查后的条件边：检查是否有约束冲突
+    def check_constraints_satisfied(state: AgentState) -> str:
+        conflicts = state.get("constraint_conflicts", [])
+        if conflicts:
+            return "conflict_resolution"
+        return END
+    
+    workflow.add_conditional_edges(
+        "budget_check",
+        check_constraints_satisfied,
+        {
+            "conflict_resolution": "conflict_resolution",
+            END: END
+        }
+    )
+    
+    # 冲突解决后的回退边
+    def decide_backtrack_target(state: AgentState) -> str:
+        backtrack_history = state.get("backtrack_history", [])
+        optimization_attempts = state.get("optimization_attempts", 0)
+        
+        # 如果尝试次数过多，直接结束
+        if optimization_attempts >= 3:
+            return END
+            
+        if backtrack_history:
+            return backtrack_history[-1]
+        return "preference_filter"  # 默认回退到偏好筛选
+    
+    workflow.add_conditional_edges(
+        "conflict_resolution",
+        decide_backtrack_target,
+        {
+            "preference_filter": "preference_filter",
+            "weather_filter": "weather_filter", 
+            "route_feasibility": "route_feasibility",
+            END: END
+        }
+    )
+    
     # 从追问节点回到解析节点，但需要用户输入（由外层下一轮驱动）
     workflow.add_edge("ask_question", END)
     
     return workflow.compile()
+
+# ==================== 约束处理节点 ====================
+
+# 1. 偏好筛选节点
+def preference_filter(state: AgentState) -> AgentState:
+    """按景点受欢迎程度和个人偏好生成候选景点列表"""
+    info = state.get("structured_info", {})
+    preferences = info.get("preferences", {})
+    trip_days = info.get("constraints", {}).get("derived", {}).get("trip_days", 1)
+    
+    # 确保每天至少4个候选景点
+    min_candidates = trip_days * 4
+    
+    # TODO: 实现具体的偏好筛选逻辑
+    # 1. 读取 beijing_poi.json
+    # 2. 根据 popularity_score 排序
+    # 3. 根据用户偏好筛选
+    # 4. 确保候选数量足够
+    
+    state["candidate_pois"] = []  # 临时占位
+    return state
+
+# 2. 团队约束节点  
+def team_constraints(state: AgentState) -> AgentState:
+    """根据团队人数与构成限制游玩时长及住宿配置"""
+    info = state.get("structured_info", {})
+    group = info.get("group", {})
+    
+    adults = group.get("adults", 1)
+    children = group.get("children", 0) 
+    elderly = group.get("elderly", 0)
+    
+    # 计算每日游玩时间限制
+    if elderly > 0 or children > 0:
+        daily_time_limit = 9  # 有老人或儿童，每天最多9小时
+    else:
+        daily_time_limit = 12  # 只有成年人，每天最多12小时
+    
+    # 计算住宿配置：小孩算0.5个人，总人数求和取整后除以2，商和余数相加
+    total_people = adults + (children * 0.5) + elderly
+    total_people_rounded = int(total_people)
+    quotient = total_people_rounded // 2
+    remainder = total_people_rounded % 2
+    room_requirements = quotient + remainder
+    
+    state["daily_time_limit"] = daily_time_limit
+    state["room_requirements"] = room_requirements
+    
+    return state
+
+# 3. 天气过滤节点
+def weather_filter(state: AgentState) -> AgentState:
+    """根据每天的天气过滤候选景点"""
+    candidate_pois = state.get("candidate_pois", [])
+    
+    # TODO: 集成天气工具
+    # 1. 获取每日天气数据
+    # 2. 过滤室外景点（雨雪天气）
+    # 3. 若某天无可行景点，尝试跨天交换或引入次选景点
+    
+    state["weather_adjusted_pois"] = candidate_pois  # 临时直接传递
+    return state
+
+# 4. 路线可行性规划节点
+def route_feasibility(state: AgentState) -> AgentState:
+    """安排景点、餐厅、酒店、交通方式，要求日内地点需要顺路"""
+    weather_adjusted_pois = state.get("weather_adjusted_pois", [])
+    daily_time_limit = state.get("daily_time_limit", 12)
+    info = state.get("structured_info", {})
+    
+    # TODO: 实现路线规划逻辑
+    # 1. 根据用户偏好筛选餐厅
+    # 2. 通过工具函数获取酒店列表
+    # 3. 安排交通方式
+    # 4. 确保日内地点顺路且满足时间限制
+    
+    state["daily_route_plan"] = []  # 临时占位
+    return state
+
+# 5. 时间窗口检查节点
+def time_window_check(state: AgentState) -> AgentState:
+    """检查景点开放时间和建议游玩时间是否满足"""
+    daily_route_plan = state.get("daily_route_plan", [])
+    
+    # TODO: 实现时间窗口检查
+    # 1. 检查每个景点的开放时间
+    # 2. 验证建议游玩时间是否满足
+    # 3. 确保到达时间与关闭时间差值 > suggested_duration_hours
+    
+    state["time_feasible_routes"] = daily_route_plan  # 临时直接传递
+    return state
+
+# 6. 强度检查节点
+def intensity_check(state: AgentState) -> AgentState:
+    """检查每日活动强度是否超过上限"""
+    time_feasible_routes = state.get("time_feasible_routes", [])
+    
+    # TODO: 实现强度检查
+    # 1. 计算每日活动强度分值
+    # 2. 检查是否超过上限
+    # 3. 若超强度，减少当天景点或替换为低强度景点
+    
+    state["intensity_feasible_routes"] = time_feasible_routes  # 临时直接传递
+    return state
+
+# 7. 预算检查节点
+def budget_check(state: AgentState) -> AgentState:
+    """计算景点、餐饮、酒店、交通总花费，并检查预算"""
+    intensity_feasible_routes = state.get("intensity_feasible_routes", [])
+    info = state.get("structured_info", {})
+    budget = info.get("budget", {})
+    room_requirements = state.get("room_requirements", 1)
+    
+    # TODO: 实现预算检查
+    # 1. 计算各项费用
+    # 2. 检查是否超预算
+    # 3. 若超预算，优先调整高价环节（酒店→餐饮→景点）
+    
+    state["budget_feasible_plan"] = {
+        "routes": intensity_feasible_routes,
+        "total_cost": 0,
+        "breakdown": {}
+    }
+    
+    # 清空约束冲突（表示所有约束都满足）
+    state["constraint_conflicts"] = []
+    
+    return state
+
+# 8. 冲突解决节点
+def conflict_resolution(state: AgentState) -> AgentState:
+    """处理约束冲突，决定回退策略"""
+    conflicts = state.get("constraint_conflicts", [])
+    backtrack_history = state.get("backtrack_history", [])
+    optimization_attempts = state.get("optimization_attempts", 0)
+    
+    # 更新优化尝试次数
+    state["optimization_attempts"] = optimization_attempts + 1
+    
+    # 如果尝试次数过多，使用较宽松的约束
+    if optimization_attempts >= 3:
+        state["constraint_conflicts"] = []  # 强制结束冲突
+        return state
+    
+    # 根据冲突类型决定回退层级
+    if "budget" in conflicts:
+        # 预算冲突：回退到路线规划
+        backtrack_target = "route_feasibility"
+    elif "intensity" in conflicts or "time_window" in conflicts:
+        # 强度或时间冲突：回退到路线规划  
+        backtrack_target = "route_feasibility"
+    elif "weather" in conflicts:
+        # 天气冲突：回退到天气过滤
+        backtrack_target = "weather_filter"
+    else:
+        # 其他冲突：回退到偏好筛选
+        backtrack_target = "preference_filter"
+    
+    # 记录回退历史
+    state["backtrack_history"] = backtrack_history + [backtrack_target]
+    
+    return state
 
 # 从poi_utils导入的函数
 def determine_daily_time_budget(group):
