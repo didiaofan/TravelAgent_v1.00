@@ -40,6 +40,12 @@ def init_state(user_input: str) -> AgentState:
         "weather_adjusted_pois": [], 
         "daily_time_limit": 12,
         "room_requirements": 1,
+        
+        # 细粒度的选择结果初始化
+        "selected_restaurants": [],
+        "selected_hotels": [],
+        "transportation_plan": [],
+        
         "daily_route_plan": [],
         "time_feasible_routes": [],
         "intensity_feasible_routes": [],
@@ -241,46 +247,30 @@ def prepare_constraints(state: AgentState) -> AgentState:
     constraints["derived"]["dates"] = {"start_date": start_date, "end_date": end_date}
     return state
 
-# 实时数据获取节点（占位）：天气/路程/票价等
-def fetch_realtime_data(state: AgentState) -> AgentState:
-    info = state.get("structured_info", {})
-    info.setdefault("realtime", {})
-    return state
 
-# 约束校验节点（占位）：确保派生约束有效
-def validate_constraints(state: AgentState) -> AgentState:
-    info = state.get("structured_info", {})
-    constraints = info.get("constraints", {}).get("derived", {})
-    issues: List[str] = []
-    daily = int(constraints.get("daily_time_budget_hours") or 0)
-    days = int(constraints.get("trip_days") or 0)
-    if daily <= 0:
-        issues.append("invalid_daily_time_budget")
-        constraints["daily_time_budget_hours"] = 12
-    if days <= 0:
-        issues.append("invalid_trip_days")
-        constraints["trip_days"] = 1
-    info.setdefault("validation", {})
-    info["validation"]["issues"] = issues
-    return state
 
-# 生成候选景点节点（当信息完整且准备/校验后触发）
-def generate_candidates(state: AgentState) -> AgentState:
-    try:
-        result = generate_candidate_attractions(state.get("structured_info", {}))
-        state["structured_info"]["candidates"] = result.get("candidates", [])
-        state["structured_info"]["daily_plan"] = result.get("daily_plan", [])
-        state["structured_info"]["total_cost"] = result.get("total_cost")
-        state["structured_info"]["itinerary_text"] = result.get("itinerary_text")
-    except Exception:
-        state["structured_info"].setdefault("candidates", [])
-        state["structured_info"].setdefault("daily_plan", [])
-        state["structured_info"].setdefault("total_cost", None)
-        state["structured_info"].setdefault("itinerary_text", "")
-    return state
+
 
 # 生成追问节点
 def generate_question(state: AgentState) -> AgentState:
+    # 检查是否因为天气约束失败需要重新询问日期
+    needs_date_change = state.get("needs_date_change", False)
+    date_change_reason = state.get("date_change_reason", "")
+    
+    if needs_date_change:
+        content = f"抱歉，根据天气预报分析，{date_change_reason}。\n\n请重新选择您的出行日期，我将为您重新规划行程。请提供新的开始日期和结束日期（格式：YYYY-MM-DD）。"
+        state["conversation"].append({
+            "role": "assistant",
+            "content": content
+        })
+        # 清除天气约束标记，重置状态以便重新处理
+        state["needs_date_change"] = False
+        state["date_change_reason"] = ""
+        state["weather_constraint_result"] = ""
+        # 将日期字段重新标记为缺失，以便重新收集
+        state["missing_fields"] = ["start_date", "end_date"]
+        return state
+    
     if not state["missing_fields"]:
         state["conversation"].append({
             "role": "assistant",
@@ -333,14 +323,19 @@ def create_agent_workflow():
     workflow.add_node("check_fields", check_missing_fields)
     workflow.add_node("ask_question", generate_question)
     workflow.add_node("prepare_constraints", prepare_constraints)
-    workflow.add_node("fetch_realtime_data", fetch_realtime_data)
-    workflow.add_node("validate_constraints", validate_constraints)
     
     # 添加约束处理节点
     workflow.add_node("preference_filter", preference_filter)
     workflow.add_node("team_constraints", team_constraints)
     workflow.add_node("weather_filter", weather_filter)
-    workflow.add_node("route_feasibility", route_feasibility)
+    
+    # 细粒度的路线规划节点
+    workflow.add_node("restaurant_selection", restaurant_selection)
+    workflow.add_node("hotel_selection", hotel_selection)
+    workflow.add_node("transportation_planning", transportation_planning)
+    workflow.add_node("route_optimization", route_optimization)
+    
+    # 检查节点
     workflow.add_node("time_window_check", time_window_check)
     workflow.add_node("intensity_check", intensity_check)
     workflow.add_node("budget_check", budget_check)
@@ -372,15 +367,36 @@ def create_agent_workflow():
     )
     
     # 准备阶段 → 约束处理阶段
-    workflow.add_edge("prepare_constraints", "fetch_realtime_data")
-    workflow.add_edge("fetch_realtime_data", "validate_constraints")
-    workflow.add_edge("validate_constraints", "preference_filter")
+    workflow.add_edge("prepare_constraints", "preference_filter")
     
     # 约束处理阶段的边（按照依赖关系）
     workflow.add_edge("preference_filter", "team_constraints")
     workflow.add_edge("team_constraints", "weather_filter") 
-    workflow.add_edge("weather_filter", "route_feasibility")
-    workflow.add_edge("route_feasibility", "time_window_check")
+    
+    # 天气过滤后的条件边：检查是否需要重新选择日期
+    def check_weather_constraint_result(state: AgentState) -> str:
+        weather_result = state.get("weather_constraint_result", "success")
+        needs_date_change = state.get("needs_date_change", False)
+        
+        if needs_date_change or weather_result in ["extreme_weather_blocking", "must_visit_conflict", "insufficient_fullness"]:
+            return END  # 暂时结束，等待用户重新输入日期
+        else:
+            return "restaurant_selection"
+    
+    workflow.add_conditional_edges(
+        "weather_filter",
+        check_weather_constraint_result,
+        {
+            "restaurant_selection": "restaurant_selection",
+            END: END
+        }
+    )
+    workflow.add_edge("restaurant_selection", "hotel_selection")
+    workflow.add_edge("hotel_selection", "transportation_planning") 
+    workflow.add_edge("transportation_planning", "route_optimization")
+    
+    # 检查阶段
+    workflow.add_edge("route_optimization", "time_window_check")
     workflow.add_edge("time_window_check", "intensity_check")
     workflow.add_edge("intensity_check", "budget_check")
     
@@ -419,7 +435,8 @@ def create_agent_workflow():
         {
             "preference_filter": "preference_filter",
             "weather_filter": "weather_filter", 
-            "route_feasibility": "route_feasibility",
+            "restaurant_selection": "restaurant_selection",
+            "route_optimization": "route_optimization",
             END: END
         }
     )
@@ -434,20 +451,22 @@ def create_agent_workflow():
 # 1. 偏好筛选节点
 def preference_filter(state: AgentState) -> AgentState:
     """按景点受欢迎程度和个人偏好生成候选景点列表"""
+    from .poi_utils import generate_preference_filtered_candidates
+    
     info = state.get("structured_info", {})
     preferences = info.get("preferences", {})
+    group = info.get("group", {})
     trip_days = info.get("constraints", {}).get("derived", {}).get("trip_days", 1)
     
-    # 确保每天至少4个候选景点
-    min_candidates = trip_days * 4
+    try:
+        # 调用专门的候选景点生成函数
+        candidates = generate_preference_filtered_candidates(group, preferences, trip_days)
+        state["candidate_pois"] = candidates
+        
+    except Exception as e:
+        print(f"偏好筛选节点失败: {str(e)}")
+        state["candidate_pois"] = []
     
-    # TODO: 实现具体的偏好筛选逻辑
-    # 1. 读取 beijing_poi.json
-    # 2. 根据 popularity_score 排序
-    # 3. 根据用户偏好筛选
-    # 4. 确保候选数量足够
-    
-    state["candidate_pois"] = []  # 临时占位
     return state
 
 # 2. 团队约束节点  
@@ -478,31 +497,268 @@ def team_constraints(state: AgentState) -> AgentState:
     
     return state
 
-# 3. 天气过滤节点
+# 3. 天气过滤节点 - 重新设计的流程
 def weather_filter(state: AgentState) -> AgentState:
-    """根据每天的天气过滤候选景点"""
+    """
+    根据新的天气约束流程进行筛选
+    
+    流程：
+    A. 检查极端天气是否阻断出行
+    B. 检查必去景点是否受天气影响
+    C. 筛选完全不可访问的景点
+    D. 检查行程饱满度
+    """
+    import os
+    from datetime import datetime, timedelta
+    from tools.weather import get_weather_7d
+    from .weather_classifier import WeatherClassifier, format_weather_analysis
+    
     candidate_pois = state.get("candidate_pois", [])
-    
-    # TODO: 集成天气工具
-    # 1. 获取每日天气数据
-    # 2. 过滤室外景点（雨雪天气）
-    # 3. 若某天无可行景点，尝试跨天交换或引入次选景点
-    
-    state["weather_adjusted_pois"] = candidate_pois  # 临时直接传递
-    return state
-
-# 4. 路线可行性规划节点
-def route_feasibility(state: AgentState) -> AgentState:
-    """安排景点、餐厅、酒店、交通方式，要求日内地点需要顺路"""
-    weather_adjusted_pois = state.get("weather_adjusted_pois", [])
-    daily_time_limit = state.get("daily_time_limit", 12)
     info = state.get("structured_info", {})
     
-    # TODO: 实现路线规划逻辑
-    # 1. 根据用户偏好筛选餐厅
-    # 2. 通过工具函数获取酒店列表
-    # 3. 安排交通方式
-    # 4. 确保日内地点顺路且满足时间限制
+    try:
+        # 1. 获取行程日期和团队信息
+        start_date = info.get("start_date")
+        end_date = info.get("end_date")
+        preferences = info.get("preferences", {})
+        must_visit_pois = preferences.get("must_visit", [])
+        
+        if not start_date or not end_date:
+            print("⚠️ 缺少行程日期信息，跳过天气过滤")
+            state["weather_adjusted_pois"] = candidate_pois
+            return state
+        
+        # 生成行程日期列表
+        trip_dates = []
+        current_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+        
+        while current_date <= end_date_obj:
+            trip_dates.append(current_date.strftime("%Y-%m-%d"))
+            current_date += timedelta(days=1)
+            
+        trip_days = len(trip_dates)
+        print(f"🗓️ 行程日期: {start_date} 至 {end_date} (共{trip_days}天)")
+        
+        # 获取团队约束信息
+        constraints = info.get("constraints", {}).get("derived", {})
+        daily_time_budget = constraints.get("daily_time_budget_hours", 12)
+        
+        # 2. 获取天气数据
+        location_code = "101010100"  # 北京LocationID
+        api_host = os.getenv("HEFENG_API_HOST")
+        api_key = os.getenv("HEFENG_API_KEY")
+        
+        if not api_host or not api_key:
+            print("⚠️ 缺少天气API配置，跳过天气过滤")
+            state["weather_adjusted_pois"] = candidate_pois
+            return state
+        
+        print(f"🌤️ 正在获取北京天气数据...")
+        
+        response = get_weather_7d(location_code, api_host, api_key)
+        
+        if response.status_code != 200:
+            print(f"❌ 天气API请求失败: {response.status_code}")
+            state["weather_adjusted_pois"] = candidate_pois
+            return state
+        
+        weather_data = response.json()
+        
+        if weather_data.get("code") != "200":
+            print(f"❌ 天气API返回错误: {weather_data.get('code')}")
+            state["weather_adjusted_pois"] = candidate_pois
+            return state
+        
+        daily_weather = weather_data.get("daily", [])
+        print(f"✅ 获取到{len(daily_weather)}天天气数据")
+        
+        # 3. 分析行程期间天气
+        classifier = WeatherClassifier()
+        weather_analysis = classifier.analyze_trip_weather(daily_weather, trip_dates)
+        
+        # 打印天气分析结果
+        weather_report = format_weather_analysis(weather_analysis)
+        print("\n" + weather_report)
+        
+        # ================ 新的天气约束流程 ================
+        
+        print("\n🔍 执行新的天气约束流程...")
+        
+        # A. 检查是否有极端天气导致不能满足约定的出行天数
+        print("\n步骤A: 检查极端天气阻断...")
+        is_blocked_by_extreme_weather = classifier.check_extreme_weather_blocking(weather_analysis, trip_days)
+        
+        if is_blocked_by_extreme_weather:
+            print("❌ 极端天气导致无法满足约定出行天数，建议重新选择日期")
+            state["weather_constraint_result"] = "extreme_weather_blocking"
+            state["weather_adjusted_pois"] = []
+            state["weather_analysis"] = weather_analysis
+            # 设置需要回到意图输入环节的标记
+            state["needs_date_change"] = True
+            state["date_change_reason"] = "极端天气导致无法满足约定出行天数"
+            return state
+        else:
+            print("✅ 极端天气检查通过")
+            
+        # B. 检查必去景点是否受天气影响
+        print("\n步骤B: 检查必去景点天气冲突...")
+        
+        # 获取必去景点的POI信息
+        must_visit_poi_objects = []
+        if must_visit_pois:
+            for must_visit_name in must_visit_pois:
+                # 在候选景点中查找必去景点
+                for poi in candidate_pois:
+                    if must_visit_name in poi.get("name", "") or poi.get("name", "") in must_visit_name:
+                        must_visit_poi_objects.append(poi)
+                        break
+        
+        has_must_visit_conflict = classifier.check_must_visit_weather_conflict(weather_analysis, must_visit_poi_objects)
+        
+        if has_must_visit_conflict:
+            print("❌ 必去景点受天气影响无法访问，建议重新选择日期")
+            print(f"受影响的必去景点: {[poi.get('name') for poi in must_visit_poi_objects]}")
+            state["weather_constraint_result"] = "must_visit_conflict"
+            state["weather_adjusted_pois"] = []
+            state["weather_analysis"] = weather_analysis
+            # 设置需要回到意图输入环节的标记
+            state["needs_date_change"] = True
+            state["date_change_reason"] = "必去景点受天气影响无法访问"
+            return state
+        else:
+            print("✅ 必去景点天气检查通过")
+            
+        # C. 筛选完全不可访问的景点
+        print("\n步骤C: 筛选完全不可访问的景点...")
+        filtered_pois = classifier.filter_completely_inaccessible_pois(candidate_pois, weather_analysis)
+        
+        print(f"原候选景点: {len(candidate_pois)}个")
+        print(f"天气筛选后: {len(filtered_pois)}个")
+        
+        if len(filtered_pois) < len(candidate_pois):
+            removed_count = len(candidate_pois) - len(filtered_pois)
+            print(f"因天气原因移除: {removed_count}个景点")
+            
+            # 显示被移除的景点
+            removed_pois = [poi for poi in candidate_pois if poi not in filtered_pois]
+            if removed_pois:
+                print("被移除的景点:")
+                for poi in removed_pois[:5]:  # 只显示前5个
+                    indoor_status = poi.get("indoor", "未知")
+                    print(f"  - {poi['name']} (室内状态: {indoor_status})")
+                if len(removed_pois) > 5:
+                    print(f"  ... 还有{len(removed_pois) - 5}个")
+        
+        # D. 检查行程饱满度
+        print("\n步骤D: 检查行程饱满度...")
+        is_full, fullness_analysis = classifier.check_trip_fullness(filtered_pois, daily_time_budget, trip_days)
+        
+        print(f"行程时间预算: {fullness_analysis['total_time_budget']}小时")
+        print(f"景点游玩时间: {fullness_analysis['total_suggested_hours']}小时")
+        print(f"时间差: {fullness_analysis['time_difference']}小时")
+        print(f"饱满度: {fullness_analysis['fullness_percentage']:.1f}%")
+        
+        if not is_full:
+            print("❌ 行程不够饱满，建议重新选择日期")
+            state["weather_constraint_result"] = "insufficient_fullness"
+            state["weather_adjusted_pois"] = []
+            state["weather_analysis"] = weather_analysis
+            state["fullness_analysis"] = fullness_analysis
+            # 设置需要回到意图输入环节的标记
+            state["needs_date_change"] = True
+            state["date_change_reason"] = f"行程不够饱满，剩余时间过多({fullness_analysis['time_difference']}小时)"
+            return state
+        else:
+            print("✅ 行程饱满度检查通过")
+        
+        # E. 成功通过所有检查
+        print("\n🎉 天气约束检查全部通过！")
+        
+        # 显示保留的景点
+        if filtered_pois:
+            print("\n保留的景点:")
+            for poi in filtered_pois[:8]:  # 显示前8个
+                indoor_status = poi.get("indoor", "未知")
+                duration = poi.get("suggested_duration_hours", 2.0)
+                print(f"  ✓ {poi['name']} (室内状态: {indoor_status}, 建议时长: {duration}h)")
+            if len(filtered_pois) > 8:
+                print(f"  ... 还有{len(filtered_pois) - 8}个")
+        
+        state["weather_constraint_result"] = "success"
+        state["weather_adjusted_pois"] = filtered_pois
+        state["weather_analysis"] = weather_analysis
+        state["fullness_analysis"] = fullness_analysis
+        
+    except Exception as e:
+        print(f"❌ 天气过滤失败: {str(e)}")
+        # 出错时直接传递原候选景点
+        state["weather_adjusted_pois"] = candidate_pois
+        state["weather_constraint_result"] = "error"
+    
+    return state
+
+# 4a. 餐厅选择节点
+def restaurant_selection(state: AgentState) -> AgentState:
+    """根据用户偏好和位置筛选餐厅"""
+    weather_adjusted_pois = state.get("weather_adjusted_pois", [])
+    info = state.get("structured_info", {})
+    preferences = info.get("preferences", {})
+    cuisine_prefs = preferences.get("cuisine", [])
+    
+    # TODO: 实现餐厅筛选逻辑
+    # 1. 根据景点位置获取附近餐厅
+    # 2. 根据用户偏好筛选餐厅类型
+    # 3. 考虑价位和评分
+    
+    state["selected_restaurants"] = []  # 临时占位
+    return state
+
+# 4b. 酒店选择节点  
+def hotel_selection(state: AgentState) -> AgentState:
+    """根据团队需求和位置选择酒店"""
+    info = state.get("structured_info", {})
+    room_requirements = state.get("room_requirements", 1)
+    start_date = info.get("start_date")
+    end_date = info.get("end_date")
+    
+    # TODO: 集成酒店工具
+    # 1. 使用 HotelTool 查询可用酒店
+    # 2. 根据房间需求筛选
+    # 3. 考虑位置便利性和价格
+    
+    state["selected_hotels"] = []  # 临时占位
+    return state
+
+# 4c. 交通规划节点
+def transportation_planning(state: AgentState) -> AgentState:
+    """规划各地点间的交通方式和路线"""
+    weather_adjusted_pois = state.get("weather_adjusted_pois", [])
+    selected_restaurants = state.get("selected_restaurants", [])
+    selected_hotels = state.get("selected_hotels", [])
+    
+    # TODO: 集成路线工具
+    # 1. 使用 get_route_info 获取地点间路线信息
+    # 2. 比较公共交通vs出租车的时间和费用
+    # 3. 根据团队情况选择合适的交通方式
+    
+    state["transportation_plan"] = []  # 临时占位
+    return state
+
+# 4d. 路线优化节点
+def route_optimization(state: AgentState) -> AgentState:
+    """优化每日路线，确保顺路且满足时间限制"""
+    weather_adjusted_pois = state.get("weather_adjusted_pois", [])
+    selected_restaurants = state.get("selected_restaurants", [])
+    selected_hotels = state.get("selected_hotels", [])
+    transportation_plan = state.get("transportation_plan", [])
+    daily_time_limit = state.get("daily_time_limit", 12)
+    
+    # TODO: 实现路线优化算法
+    # 1. 按地理位置聚类景点
+    # 2. 优化每日游览顺序（最短路径问题）
+    # 3. 插入餐厅和休息时间
+    # 4. 验证总时间不超过限制
     
     state["daily_route_plan"] = []  # 临时占位
     return state
@@ -574,11 +830,14 @@ def conflict_resolution(state: AgentState) -> AgentState:
     
     # 根据冲突类型决定回退层级
     if "budget" in conflicts:
-        # 预算冲突：回退到路线规划
-        backtrack_target = "route_feasibility"
+        # 预算冲突：回退到路线优化
+        backtrack_target = "route_optimization"
     elif "intensity" in conflicts or "time_window" in conflicts:
-        # 强度或时间冲突：回退到路线规划  
-        backtrack_target = "route_feasibility"
+        # 强度或时间冲突：回退到路线优化  
+        backtrack_target = "route_optimization"
+    elif "restaurant" in conflicts or "hotel" in conflicts or "transportation" in conflicts:
+        # 餐厅/酒店/交通冲突：回退到餐厅选择
+        backtrack_target = "restaurant_selection"
     elif "weather" in conflicts:
         # 天气冲突：回退到天气过滤
         backtrack_target = "weather_filter"

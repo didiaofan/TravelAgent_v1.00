@@ -16,6 +16,11 @@ class Config:
     
     # 其他API密钥
     WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
+    
+    # 和风天气API配置
+    HEFENG_API_HOST = os.getenv("HEFENG_API_HOST")
+    HEFENG_API_KEY = os.getenv("HEFENG_API_KEY")
+    
     HOTEL_API_KEY = os.getenv("HOTEL_API_KEY")
     TRANSPORT_API_KEY = os.getenv("TRANSPORT_API_KEY")
     

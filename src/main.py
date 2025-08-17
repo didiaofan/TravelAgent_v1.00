@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.workflow import create_agent_workflow, init_state, MAX_CONVERSATION_STEPS
+from langgraph.graph import END
 
 # 主函数：运行Agent（单次执行）
 def run_travel_agent(user_input: str):
@@ -83,24 +84,32 @@ def run_travel_agent_multi_turn(initial_input: str, max_turns: int = 5):
     print("达到最大对话轮次，使用当前信息生成行程。")
     return state["structured_info"]
 
-# 测试示例
+
+
+# 主程序入口
 if __name__ == "__main__":
-    # user_input = "我带孩子从上海到北京玩两天，时间是2025-08-10至2025-08-11，想去故宫和环球影城，只有我和孩子两个人，两天预1800"
-    user_input = "我带孩子从上海到北京玩两天"
+    user_input = "我带孩子从上海到北京玩两天，时间是2025-08-17至2025-08-18，想去故宫和环球影城和北京野生动物园，只有我和孩子2个人，两天预8000"
     
-    print("=== 旅行规划Agent V2 (重构版) ===")
+    print("=== 旅行规划Agent V4 ===")
     print(f"User: {user_input}")
     
-    # 使用多轮对话版本，避免递归问题
-    final_info = run_travel_agent_multi_turn(user_input, max_turns=5)
-    
-    itinerary_text = final_info.get('itinerary_text') if isinstance(final_info, dict) else None
-    if itinerary_text:
-        print("\n=== 行程方案 ===")
-        print(itinerary_text)
-        total_cost = final_info.get('total_cost')
-        if total_cost is not None:
-            print(f"\n总花费：{total_cost} 元")
-    else:
-        print("\n=== 结构化输出 ===")
-        print(json.dumps(final_info, ensure_ascii=False, indent=2))
+    try:
+        # 使用多轮对话版本，避免递归问题
+        final_info = run_travel_agent_multi_turn(user_input, max_turns=5)
+        
+        itinerary_text = final_info.get('itinerary_text') if isinstance(final_info, dict) else None
+        if itinerary_text:
+            print("\n=== 行程方案 ===")
+            print(itinerary_text)
+            total_cost = final_info.get('total_cost')
+            if total_cost is not None:
+                print(f"\n总花费：{total_cost} 元")
+        else:
+            print("\n=== 结构化输出 ===")
+            print(json.dumps(final_info, ensure_ascii=False, indent=2))
+            
+    except KeyboardInterrupt:
+        print("\n👋 程序退出")
+    except Exception as e:
+        print(f"\n❌ 程序执行失败: {str(e)}")
+        print("💡 如需测试单个节点，请使用 tests/ 目录下的测试文件")

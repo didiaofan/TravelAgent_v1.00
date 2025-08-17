@@ -60,18 +60,119 @@ def compute_poi_score(poi: Dict[str, Any], preferences: Optional[Dict[str, Any]]
     base = float(poi.get("popularity_score") or 0.0)
     if not preferences:
         return base
-    bonus = 0.0
-    preferred_types = set([t.strip() for t in (preferences.get("attraction_types") or []) if str(t).strip()])
-    poi_tags = set([str(t) for t in (poi.get("tags") or [])])
-    if preferred_types and (poi_tags & preferred_types):
-        bonus += 0.05
-    must_visit = set([m.strip() for m in (preferences.get("must_visit") or []) if str(m).strip()])
-    if poi.get("name") in must_visit:
-        bonus += 0.1
+    
+    # 处理避免列表：直接减分
     avoid_list = set([a.strip() for a in (preferences.get("avoid") or []) if str(a).strip()])
+    poi_tags = set([str(t) for t in (poi.get("tags") or [])])
     if poi.get("name") in avoid_list or (avoid_list and (poi_tags & avoid_list)):
-        return 0.0
-    return base + bonus
+        base -= 1.0  # 避免景点减1分
+    
+    # 处理必去景点：大幅加分（支持模糊匹配）
+    must_visit = set([m.strip() for m in (preferences.get("must_visit") or []) if str(m).strip()])
+    poi_name = poi.get("name", "")
+    
+    # 精确匹配
+    if poi_name in must_visit:
+        base += 1.0  # 必去景点加1分
+    else:
+        # 模糊匹配：检查必去景点名称是否包含在POI名称中，或POI名称是否包含必去景点名称
+        for must_visit_name in must_visit:
+            if (must_visit_name in poi_name) or (poi_name in must_visit_name):
+                base += 1.0  # 必去景点加1分
+                break
+    
+    # 处理偏好类型：适度加分
+    preferred_types = set([t.strip() for t in (preferences.get("attraction_types") or []) if str(t).strip()])
+    if preferred_types and (poi_tags & preferred_types):
+        base += 0.3  # 偏好类型加0.3分
+    
+    return base
+
+def generate_preference_filtered_candidates(
+    group: Dict[str, Any], 
+    preferences: Dict[str, Any], 
+    trip_days: int
+) -> List[Dict[str, Any]]:
+    """
+    按偏好和受欢迎程度生成候选景点列表
+    
+    Args:
+        group: 团队信息
+        preferences: 用户偏好 
+        trip_days: 游玩天数
+        
+    Returns:
+        候选景点列表，按综合得分排序
+    """
+    import json
+    import os
+    
+    # 确保每天至少4个候选景点
+    min_candidates = trip_days * 4
+    
+    try:
+        # 1. 读取景点数据（使用现有的注释处理函数）
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        poi_file_path = os.path.join(current_dir, '..', 'data', 'beijing_poi.json')
+        all_pois = load_poi_data(poi_file_path)
+        
+        # 2. 过滤适合团队的景点
+        suitable_pois = []
+        for poi in all_pois:
+            if is_poi_suitable_for_group(poi, group):
+                suitable_pois.append(poi)
+        
+        # 3. 计算综合得分并排序
+        scored_pois = []
+        for poi in suitable_pois:
+            score = compute_poi_score(poi, preferences)
+            poi_with_score = poi.copy()
+            poi_with_score['computed_score'] = score
+            scored_pois.append(poi_with_score)
+        
+        # 4. 按综合得分排序（必去景点和高评分景点优先）
+        scored_pois.sort(key=lambda x: x['computed_score'], reverse=True)
+        
+        # 5. 选择候选景点（取足够数量，但不限制上限）
+        # 至少选择 min_candidates 个，但如果有更多合适的也可以选择
+        target_count = max(min_candidates, min(len(scored_pois), min_candidates + 6))  # 最多额外选6个
+        final_candidates = scored_pois[:target_count]
+        
+        print(f"偏好筛选完成：从{len(all_pois)}个景点中筛选出{len(final_candidates)}个候选景点")
+        print(f"游玩天数：{trip_days}天，最小候选数：{min_candidates}个")
+        
+        # 打印关键信息
+        must_visit = set([m.strip() for m in (preferences.get("must_visit") or []) if str(m).strip()])
+        if must_visit:
+            # 检查哪些必去景点被包含（支持模糊匹配）
+            found_must_visit = []
+            for poi in final_candidates:
+                poi_name = poi.get('name', '')
+                # 精确匹配
+                if poi_name in must_visit:
+                    found_must_visit.append(poi)
+                else:
+                    # 模糊匹配
+                    for must_visit_name in must_visit:
+                        if (must_visit_name in poi_name) or (poi_name in must_visit_name):
+                            found_must_visit.append(poi)
+                            break
+            
+            print(f"必去景点：{len(found_must_visit)}/{len(must_visit)} 个已包含")
+            for poi in found_must_visit:
+                print(f"  ✓ {poi['name']} (得分: {poi['computed_score']:.3f})")
+        
+        # 显示前几个候选景点
+        if final_candidates:
+            print("候选景点（按得分排序）：")
+            for i, poi in enumerate(final_candidates[:8]):  # 显示前8个
+                print(f"  {i+1}. {poi['name']} (得分: {poi['computed_score']:.3f})")
+        
+        return final_candidates
+        
+    except Exception as e:
+        print(f"生成候选景点失败: {str(e)}")
+        return []
 
 def schedule_pois_across_days(sorted_pois: List[Dict[str, Any]], num_days: int, daily_capacity: int) -> Dict[str, Any]:
     """贪心装箱：按分数排序依次放入每天，不可拆分。返回 daily_plan 与已选列表。"""

@@ -40,6 +40,12 @@ class AgentState(TypedDict):
     weather_adjusted_pois: List[Dict[str, Any]]  # 天气过滤后的景点
     daily_time_limit: int  # 每日游玩时间限制（小时）
     room_requirements: int  # 需要的房间数量
+    
+    # 细粒度的选择结果
+    selected_restaurants: List[Dict[str, Any]]  # 选中的餐厅
+    selected_hotels: List[Dict[str, Any]]  # 选中的酒店
+    transportation_plan: List[Dict[str, Any]]  # 交通规划
+    
     daily_route_plan: List[Dict[str, Any]]  # 每日路线规划
     time_feasible_routes: List[Dict[str, Any]]  # 时间可行的路线
     intensity_feasible_routes: List[Dict[str, Any]]  # 强度可行的路线
