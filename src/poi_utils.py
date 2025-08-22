@@ -135,7 +135,7 @@ def generate_preference_filtered_candidates(
         
         # 5. 选择候选景点（取足够数量，但不限制上限）
         # 至少选择 min_candidates 个，但如果有更多合适的也可以选择
-        target_count = max(min_candidates, min(len(scored_pois), min_candidates + 6))  # 最多额外选6个
+        target_count = max(min_candidates, min(len(scored_pois), min_candidates ))  # 最多额外选6个
         final_candidates = scored_pois[:target_count]
         
         print(f"偏好筛选完成：从{len(all_pois)}个景点中筛选出{len(final_candidates)}个候选景点")

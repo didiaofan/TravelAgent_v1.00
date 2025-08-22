@@ -41,17 +41,34 @@ class AgentState(TypedDict):
     daily_time_limit: int  # 每日游玩时间限制（小时）
     room_requirements: int  # 需要的房间数量
     
-    # 细粒度的选择结果
+    # 新状态图的数据结构
+    daily_candidates: List[Dict[str, Any]]  # 每日候选景点列表
     selected_restaurants: List[Dict[str, Any]]  # 选中的餐厅
     selected_hotels: List[Dict[str, Any]]  # 选中的酒店
     transportation_plan: List[Dict[str, Any]]  # 交通规划
     
-    daily_route_plan: List[Dict[str, Any]]  # 每日路线规划
-    time_feasible_routes: List[Dict[str, Any]]  # 时间可行的路线
-    intensity_feasible_routes: List[Dict[str, Any]]  # 强度可行的路线
-    budget_feasible_plan: Dict[str, Any]  # 预算可行的最终方案
+    # 强度相关
+    calculated_intensity: float  # 计算出的强度值
+    intensity_satisfied: bool  # 强度是否满足
+    intensity_optimization_attempts: int  # 强度优化尝试次数
+    can_optimize_intensity: bool  # 是否可以优化强度
     
-    # 约束处理状态
-    constraint_conflicts: List[str]  # 当前的约束冲突
-    backtrack_history: List[str]  # 回退历史
-    optimization_attempts: int  # 优化尝试次数
+    # 预算相关
+    calculated_cost: float  # 计算出的总成本
+    cost_breakdown: Dict[str, Any]  # 成本分解
+    budget_satisfied: bool  # 预算是否满足
+    budget_optimization_target: str  # 预算优化目标
+    
+    # 优化控制标记
+    hotel_optimization_blocked: bool  # 酒店优化是否被阻塞
+    transport_optimization_blocked: bool  # 交通优化是否被阻塞
+    restaurant_optimization_blocked: bool  # 餐厅优化是否被阻塞
+    is_optimization_round: bool  # 是否为优化轮次
+    
+    # 优化后的数据
+    optimized_hotels: List[Dict[str, Any]]  # 优化后的酒店
+    optimized_transportation_plan: List[Dict[str, Any]]  # 优化后的交通计划
+    optimized_restaurants: List[Dict[str, Any]]  # 优化后的餐厅
+    
+    # 每日景点数据
+    daily_available_pois: List[Dict[str, Any]]  # 每日可访问景点详细信息

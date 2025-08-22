@@ -27,14 +27,14 @@ class WeatherClassifier:
             WeatherSuitability.OUTDOOR_SUITABLE: [
                 "晴", "多云", "少云", "晴间多云", "阴", 
                 "薄雾", "霾", "浮尘", "扬沙", "沙尘",
-                "雾", "冰雹", "雨夹雪" ,"雷阵雨" # 轻微不良天气但仍可出行
+                "雾", "冰雹", "雨夹雪" ,"雷阵雨","小雨" ,"小雪"# 轻微不良天气但仍可出行
             ],
             
             # 可市内出行 - 降水天气（适合室内景点）
             WeatherSuitability.INDOOR_SUITABLE: [
-                "阵雨",  "雷阵雨伴有冰雹", "小雨", "中雨", 
+                "阵雨",  "雷阵雨伴有冰雹",  "中雨", 
                  "冻雨", "雨雪天气", "阵雨转多云", "小到中雨", 
-                "小雪", "中雪",  "雨夹雪",
+                 "中雪",  "雨夹雪",
                 "阵雪", "小到中雪",
             ],
             
@@ -335,6 +335,37 @@ class WeatherClassifier:
         }
         
         return is_full, analysis
+    
+    def is_poi_suitable_for_weather(self, poi: Dict, day_weather: Dict) -> bool:
+        """
+        判断某个景点是否适合在特定天气下访问
+        
+        Args:
+            poi: 景点信息，包含indoor字段
+            day_weather: 当天天气信息，包含suitability字段
+            
+        Returns:
+            bool: 是否适合访问
+        """
+        poi_indoor = poi.get("indoor", "未知")
+        weather_suitability = day_weather.get("suitability", WeatherSuitability.OUTDOOR_SUITABLE)
+        
+        # 如果是极端天气，不建议访问任何景点
+        if weather_suitability == WeatherSuitability.NOT_RECOMMENDED:
+            return False
+        
+        # 如果是室内景点，在任何天气下都可以访问（除了极端天气）
+        if poi_indoor == "是":
+            return True
+            
+        # 如果是室外景点
+        if poi_indoor == "否":
+            # 只有在户外适宜的天气下才能访问
+            return weather_suitability == WeatherSuitability.OUTDOOR_SUITABLE
+        
+        # 如果室内状态未知，采用保守策略
+        # 只有在户外适宜的天气下才访问
+        return weather_suitability == WeatherSuitability.OUTDOOR_SUITABLE
 
 def format_weather_analysis(weather_analysis: Dict) -> str:
     """
