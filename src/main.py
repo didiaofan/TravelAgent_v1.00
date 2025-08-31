@@ -44,11 +44,17 @@ def run_travel_agent_multi_turn(initial_input: str, max_turns: int = 5):
             print(f"\n=== 第 {turn_count + 1} 轮对话 ===")
             
             # 执行工作流
-            result = workflow.invoke(state)
+            result = workflow.invoke(state, config={"recursion_limit": 50})
             
-            # 如果已无缺失字段或达到最大轮次，直接结束
-            if (not result.get('missing_fields')) or (result.get('step_count', 0) >= MAX_CONVERSATION_STEPS):
-                print("信息收集完成！")
+            # 如果达到最大轮次，直接结束
+            if result.get('step_count', 0) >= MAX_CONVERSATION_STEPS:
+                print("达到最大对话轮次！")
+                return result.get('structured_info', state['structured_info'])
+            
+            # 如果已无缺失字段，说明信息收集完成，工作流会继续执行
+            if not result.get('missing_fields'):
+                print("信息收集完成！工作流已继续执行后续节点...")
+                # 工作流会自动执行到END，然后返回最终结果
                 return result.get('structured_info', state['structured_info'])
             
             # 显示当前状态与缺失字段
@@ -88,7 +94,7 @@ def run_travel_agent_multi_turn(initial_input: str, max_turns: int = 5):
 
 # 主程序入口
 if __name__ == "__main__":
-    user_input = "我带孩子从上海到北京玩两天，时间是2025-08-23至2025-08-25，想去故宫和环球影城和北京野生动物园，只有我和孩子2个人，两天预8000"
+    user_input = "我带孩子从上海到北京玩两天，时间是2025-09-01至2025-09-03，想去故宫和环球影城和北京野生动物园，只有我和孩子2个人，两天预算2800"
     
     print("=== 旅行规划Agent V4 ===")
     print(f"User: {user_input}")

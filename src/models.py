@@ -52,12 +52,16 @@ class AgentState(TypedDict):
     intensity_satisfied: bool  # 强度是否满足
     intensity_optimization_attempts: int  # 强度优化尝试次数
     can_optimize_intensity: bool  # 是否可以优化强度
+    valid_transport_plans: List[Dict[str, Any]]  # 符合强度约束的交通方案
     
     # 预算相关
     calculated_cost: float  # 计算出的总成本
     cost_breakdown: Dict[str, Any]  # 成本分解
     budget_satisfied: bool  # 预算是否满足
     budget_optimization_target: str  # 预算优化目标
+    recommended_plan: Dict[str, Any]  # 推荐的最优方案
+    all_plan_costs: List[Dict[str, Any]]  # 所有方案的费用对比
+    budget_check_result: str  # 预算检查结果
     
     # 优化控制标记
     hotel_optimization_blocked: bool  # 酒店优化是否被阻塞
@@ -72,3 +76,16 @@ class AgentState(TypedDict):
     
     # 每日景点数据
     daily_available_pois: List[Dict[str, Any]]  # 每日可访问景点详细信息
+    
+    # 酒店搜索数据
+    hotel_search_results: List[Dict[str, Any]]  # 酒店搜索结果
+    hotel_selection_history: List[Dict[str, Any]]  # 酒店选择历史
+    hotel_optimization_attempts: int  # 酒店优化尝试次数
+    max_hotel_optimization_attempts: int  # 最大酒店优化次数
+    excluded_hotels: List[str]  # 被排除的酒店名称列表
+    
+    # 交通规划数据
+    transportation_plans: Dict[str, Any]  # 交通规划方案
+    
+    # 强度计算数据
+    intensity_calculation_result: Dict[str, Any]  # 强度计算结果

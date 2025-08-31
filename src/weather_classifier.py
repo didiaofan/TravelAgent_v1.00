@@ -253,88 +253,9 @@ class WeatherClassifier:
             
         return False
     
-    def filter_completely_inaccessible_pois(self, candidate_pois: List[Dict], weather_analysis: Dict) -> List[Dict]:
-        """
-        根据天气情况筛选景点，剔除在整个行程期间完全不能到达的景点
-        
-        Args:
-            candidate_pois: 候选景点列表
-            weather_analysis: 天气分析结果
-            
-        Returns:
-            筛选后的景点列表
-        """
-        # 统计各种天气的天数
-        extreme_days = weather_analysis.get("extreme_weather_days", 0)
-        indoor_days = weather_analysis.get("indoor_days", 0)
-        suitable_days = weather_analysis.get("suitable_days", 0)
-        total_days = len(weather_analysis.get("daily_weather", []))
-        
-        filtered_pois = []
-        
-        for poi in candidate_pois:
-            indoor_status = poi.get("indoor")
-            
-            # 判断是否为混合型景点
-            is_mixed = (isinstance(indoor_status, str) and "混合" in indoor_status)
-            
-            # 判断是否为纯室内景点
-            is_pure_indoor = (indoor_status is True or 
-                            (isinstance(indoor_status, str) and "室内" in indoor_status and "混合" not in indoor_status) or
-                            any(keyword in poi.get("name", "") for keyword in ["博物馆", "美术馆", "科技馆", "展览馆", "商场", "购物中心"]))
-            
-            # 判断是否为纯户外景点
-            is_pure_outdoor = (indoor_status is False or 
-                             (isinstance(indoor_status, str) and "室内" not in indoor_status and "混合" not in indoor_status))
-            
-            # 筛选逻辑：
-            # 1. 如果所有天气都是极端天气，不保留任何景点
-            if extreme_days == total_days:
-                continue
-                
-            # 2. 如果所有天气都不适合户外，只保留室内和混合景点  
-            elif (extreme_days + indoor_days) == total_days and is_pure_outdoor:
-                continue
-                
-            # 3. 其他情况保留景点（好天气时保留所有景点，用户可自由选择）
-            else:
-                filtered_pois.append(poi)
-        
-        return filtered_pois
+
     
-    def check_trip_fullness(self, filtered_pois: List[Dict], daily_time_budget: float, trip_days: int) -> Tuple[bool, Dict]:
-        """
-        检查行程是否饱满
-        
-        Args:
-            filtered_pois: 筛选后的景点列表
-            daily_time_budget: 团队每日可游玩时间（小时）
-            trip_days: 游玩天数
-            
-        Returns:
-            (is_full, analysis): (是否饱满, 分析结果)
-        """
-        # 计算行程时间
-        total_time_budget = daily_time_budget * trip_days
-        
-        # 计算剩余景点的建议游玩总时间
-        total_suggested_hours = sum(poi.get("suggested_duration_hours", 2.0) for poi in filtered_pois)
-        
-        # 计算时间差
-        time_difference = total_time_budget - total_suggested_hours
-        
-        # 判断是否饱满：时间差 > 10小时代表景点太少
-        is_full = time_difference <= 10
-        
-        analysis = {
-            "total_time_budget": total_time_budget,
-            "total_suggested_hours": total_suggested_hours,
-            "time_difference": time_difference,
-            "is_full": is_full,
-            "fullness_percentage": (total_suggested_hours / total_time_budget * 100) if total_time_budget > 0 else 0
-        }
-        
-        return is_full, analysis
+
     
     def is_poi_suitable_for_weather(self, poi: Dict, day_weather: Dict) -> bool:
         """

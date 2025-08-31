@@ -174,25 +174,7 @@ def generate_preference_filtered_candidates(
         print(f"生成候选景点失败: {str(e)}")
         return []
 
-def schedule_pois_across_days(sorted_pois: List[Dict[str, Any]], num_days: int, daily_capacity: int) -> Dict[str, Any]:
-    """贪心装箱：按分数排序依次放入每天，不可拆分。返回 daily_plan 与已选列表。"""
-    used = set()
-    daily_plan: List[List[Dict[str, Any]]] = [[] for _ in range(num_days)]
-    remaining = [daily_capacity for _ in range(num_days)]
-    for poi in sorted_pois:
-        dur = int(poi.get("suggested_duration_hours") or 0)
-        if dur <= 0:
-            continue
-        for day_idx in range(num_days):
-            if poi["name"] in used:
-                break
-            if remaining[day_idx] >= dur:
-                daily_plan[day_idx].append(poi)
-                remaining[day_idx] -= dur
-                used.add(poi["name"])
-                break
-    selected = [p for p in sorted_pois if p["name"] in used]
-    return {"daily_plan": daily_plan, "selected": selected}
+
 
 def generate_candidate_attractions(structured_info: Dict[str, Any]) -> Dict[str, Any]:
     """主入口：生成满足升级后的时长/预算约束的行程与文本输出。

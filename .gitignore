@@ -19,6 +19,9 @@ __pycache__/
 *$py.class
 *.so
 
+#test
+tests/
+
 # Distribution / packaging
 .Python
 build/
